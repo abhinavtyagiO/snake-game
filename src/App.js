@@ -1,25 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Snake from "./components/snake";
+import Food from "./components/food";
+import "./App.css";
 
-function App() {
+const App = () => {
+  const [initialState, setinitialState] = useState({
+    snakeDots: [
+      [0, 0],
+      [2, 0],
+    ],
+    foodPos: [98, 8],
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="board">
+        <Snake snakeDots={initialState.snakeDots} />
+        <Food foodPos={initialState.foodPos} />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
