@@ -3,10 +3,10 @@ import React from "react";
 const Snake = (props) => {
   return (
     <div>
-      {props.snakeDots.map((snakeDot, i) => {
+      {props.snakeState.map((state, i) => {
         const coordinates = {
-          left: `${snakeDot[0]}%`,
-          top: `${snakeDot[1]}%`,
+          left: `${state[0]}%`,
+          top: `${state[1]}%`,
         };
         return <div className="snake" key={i} style={coordinates}></div>;
       })}

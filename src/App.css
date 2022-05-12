@@ -12,6 +12,7 @@
   height: 2%;
   background-color: #000;
   margin: 1px;
+  z-index: 2;
 }
 
 .food {
@@ -20,4 +21,5 @@
   height: 2%;
   background-color: purple;
   margin: 1px;
+  z-index: 1;
 }
