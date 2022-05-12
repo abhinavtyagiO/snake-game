@@ -12,12 +12,17 @@ const getRandomCoordinates = () => {
 };
 
 const App = () => {
-  const [snakeState, setSnakeState] = useState([
+  const [firstSnakeState, setSnakeState] = useState([
     [0, 0],
     [2, 0],
   ]);
+  const [secondSnakeState, setSecondSnakeState] = useState([
+    [96, 98],
+    [98, 98],
+  ]);
   const [foodState, setFoodState] = useState(getRandomCoordinates());
   const [direction, setDirection] = useState("RIGHT");
+  const [secondSnakeDirection, setSecondSnakeDirection] = useState("LEFT");
   const [speed, setSpeed] = useState(100);
   const [time, setTime] = useState(0);
 
@@ -36,11 +41,82 @@ const App = () => {
       case 40:
         setDirection("DOWN");
         break;
+
+      case 65:
+        setSecondSnakeDirection("LEFT");
+        break;
+      case 87:
+        setSecondSnakeDirection("UP");
+        break;
+      case 68:
+        setSecondSnakeDirection("RIGHT");
+        break;
+      case 83:
+        setSecondSnakeDirection("DOWN");
+        break;
     }
   };
 
-  const moveSnake = () => {
-    var snake = [...snakeState];
+  const changeTime = () => {
+    setTime(time + 1);
+  };
+
+  const onCrossingBorder = () => {
+    var firstSnakeHead = firstSnakeState[firstSnakeState.length - 1];
+    var secondSnakeHead = secondSnakeState[secondSnakeState.length - 1];
+    var firstSnakeHits =
+      firstSnakeHead[0] >= 100 ||
+      firstSnakeHead[1] >= 100 ||
+      firstSnakeHead[0] < 0 ||
+      firstSnakeHead[1] < 0;
+    var secondSnakeHits =
+      secondSnakeHead[0] >= 100 ||
+      secondSnakeHead[1] >= 100 ||
+      secondSnakeHead[0] < 0 ||
+      secondSnakeHead[1] < 0;
+    if (firstSnakeHits || secondSnakeHits) {
+      gameOver();
+    }
+  };
+
+  const onEatingItself = () => {
+    var snake = [...firstSnakeState];
+    var head = snake[snake.length - 1];
+    snake.pop();
+    snake.forEach((dot) => {
+      if (head[0] == dot[0] && head[1] == dot[1]) {
+        gameOver();
+      }
+    });
+  };
+
+  const onEatingFood = () => {
+    var firstSnakeHead = firstSnakeState[firstSnakeState.length - 1];
+    var secondSnakeHead = secondSnakeState[secondSnakeState.length - 1];
+    var food = foodState;
+    var first = firstSnakeHead[0] == food[0] && firstSnakeHead[1] == food[1];
+    var second = secondSnakeHead[0] == food[0] && secondSnakeHead[1] == food[1];
+
+    if (first || second) {
+      setFoodState(getRandomCoordinates());
+      if (first) {
+        enlargeSnake(firstSnakeState);
+      } else {
+        enlargeSnake(secondSnakeState);
+      }
+    }
+  };
+
+  const enlargeSnake = (state) => {
+    var enlargedSnake = [...state];
+    var tail = enlargedSnake[0];
+    enlargedSnake.unshift([tail[0], tail[1]]);
+    console.log(enlargedSnake);
+    setSnakeState(enlargedSnake);
+  };
+
+  const moveFirstSnake = () => {
+    var snake = [...firstSnakeState];
     var head = snake[snake.length - 1];
 
     switch (direction) {
@@ -62,43 +138,27 @@ const App = () => {
     setSnakeState(snake);
   };
 
-  const changeTime = () => {
-    setTime(time + 1);
-  };
-
-  const onCrossingBorder = () => {
-    var head = snakeState[snakeState.length - 1];
-    if (head[0] >= 100 || head[1] >= 100 || head[0] < 0 || head[1] < 0) {
-      gameOver();
-    }
-  };
-
-  const onEatingItself = () => {
-    var snake = [...snakeState];
+  const moveSecondSnake = () => {
+    var snake = [...secondSnakeState];
     var head = snake[snake.length - 1];
-    snake.pop();
-    snake.forEach((dot) => {
-      if (head[0] == dot[0] && head[1] == dot[1]) {
-        gameOver();
-      }
-    });
-  };
 
-  const onEatingFood = () => {
-    var head = snakeState[snakeState.length - 1];
-    var food = foodState;
-    if (head[0] == food[0] && head[1] == food[1]) {
-      setFoodState(getRandomCoordinates());
-      enlargeSnake();
+    switch (secondSnakeDirection) {
+      case "RIGHT":
+        head = [head[0] + 2, head[1]];
+        break;
+      case "LEFT":
+        head = [head[0] - 2, head[1]];
+        break;
+      case "UP":
+        head = [head[0], head[1] - 2];
+        break;
+      case "DOWN":
+        head = [head[0], head[1] + 2];
+        break;
     }
-  };
-
-  const enlargeSnake = () => {
-    var enlargedSnake = [...snakeState];
-    var tail = enlargedSnake[0];
-    enlargedSnake.push([tail[0], tail[1]]);
-    console.log(enlargedSnake);
-    setSnakeState(enlargedSnake);
+    snake.push(head);
+    snake.shift();
+    setSecondSnakeState(snake);
   };
 
   const gameOver = () => {
@@ -118,7 +178,8 @@ const App = () => {
   useEffect(() => {
     onCrossingBorder();
     onEatingItself();
-    moveSnake();
+    moveFirstSnake();
+    moveSecondSnake();
   }, [time]);
 
   useEffect(() => {
@@ -128,8 +189,9 @@ const App = () => {
   return (
     <div className="App">
       <div className="board">
-        <Snake snakeState={snakeState} />
+        <Snake snakeState={firstSnakeState} />
         <Food foodState={foodState} />
+        <Snake snakeState={secondSnakeState} />
       </div>
     </div>
   );
