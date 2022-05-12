@@ -11,6 +11,11 @@ const getRandomCoordinates = () => {
   return [x, y];
 };
 
+const max = 700;
+const min = 500;
+const randomDimension =
+  Math.floor((Math.random() * (max - min + 1) + min) / 2) * 2;
+
 const App = () => {
   const [firstSnakeState, setSnakeState] = useState([
     [0, 0],
@@ -188,7 +193,13 @@ const App = () => {
 
   return (
     <div className="App">
-      <div className="board">
+      <div
+        className="board"
+        style={{
+          height: `${randomDimension}px`,
+          width: `${randomDimension}px`,
+        }}
+      >
         <Snake snakeState={firstSnakeState} />
         <Food foodState={foodState} />
         <Snake snakeState={secondSnakeState} />
