@@ -1,7 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { Dialog, DialogTitle, DialogContent } from "@mui/material";
 import Snake from "./components/snake";
 import Food from "./components/food";
+import SelectDifficulty from "./components/select-difficulty";
 import "./App.css";
+
+const maxDim = 700;
+const minDim = 500;
+const randomDimension =
+  Math.floor((Math.random() * (maxDim - minDim + 1) + minDim) / 2) * 2;
+
+const maxFoodCount = 40;
+const minFoodCount = 30;
+var randomFoodCount =
+  Math.floor(
+    (Math.random() * (maxFoodCount - minFoodCount + 1) + minFoodCount) / 2
+  ) * 2;
 
 const getRandomCoordinates = () => {
   let min = 1;
@@ -10,11 +24,6 @@ const getRandomCoordinates = () => {
   let y = Math.floor((Math.random() * (max - min + 1) + min) / 2) * 2;
   return [x, y];
 };
-
-const max = 700;
-const min = 500;
-const randomDimension =
-  Math.floor((Math.random() * (max - min + 1) + min) / 2) * 2;
 
 const App = () => {
   const [firstSnakeState, setSnakeState] = useState([
@@ -28,8 +37,9 @@ const App = () => {
   const [foodState, setFoodState] = useState(getRandomCoordinates());
   const [direction, setDirection] = useState("RIGHT");
   const [secondSnakeDirection, setSecondSnakeDirection] = useState("LEFT");
-  const [speed, setSpeed] = useState(100);
+  const [speed, setSpeed] = useState(null);
   const [time, setTime] = useState(0);
+  const [openModal, setOpenModal] = useState(true);
 
   const onKeyDown = (e) => {
     e = e || window.event;
@@ -104,10 +114,15 @@ const App = () => {
 
     if (first || second) {
       setFoodState(getRandomCoordinates());
-      if (first) {
-        enlargeSnake(firstSnakeState);
-      } else {
-        enlargeSnake(secondSnakeState);
+      randomFoodCount--;
+      if (randomFoodCount > 0) {
+        if (first) {
+          enlargeSnake(firstSnakeState);
+        } else {
+          enlargeSnake(secondSnakeState);
+        }
+      } else if (randomFoodCount == 0) {
+        gameOver();
       }
     }
   };
@@ -172,8 +187,10 @@ const App = () => {
   };
 
   useEffect(() => {
-    const id = setInterval(changeTime, speed);
-    return () => clearInterval(id);
+    if (speed != null) {
+      const id = setInterval(changeTime, speed);
+      return () => clearInterval(id);
+    }
   }, [time]);
 
   useEffect(() => {
@@ -193,6 +210,12 @@ const App = () => {
 
   return (
     <div className="App">
+      <Dialog open={openModal}>
+        <DialogTitle>Snake Game 🐍</DialogTitle>
+        <DialogContent>
+          <SelectDifficulty />
+        </DialogContent>
+      </Dialog>
       <div
         className="board"
         style={{

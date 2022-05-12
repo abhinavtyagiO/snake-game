@@ -25,3 +25,8 @@
   margin: 1px;
   z-index: 1;
 }
+
+.select-difficulty-form {
+  display: flex;
+  flex-direction: column;
+}
