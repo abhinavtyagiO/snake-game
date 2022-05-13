@@ -25,13 +25,13 @@ const SelectDifficulty = (props) => {
         setError(false);
         switch (value) {
           case "easy":
-            props.setSpeed(300);
+            props.setSpeed(250);
             break;
           case "normal":
-            props.setSpeed(200);
+            props.setSpeed(150);
             break;
           case "hard":
-            props.setSpeed(100);
+            props.setSpeed(50);
             break;
         }
         props.setOpenModal(false);
