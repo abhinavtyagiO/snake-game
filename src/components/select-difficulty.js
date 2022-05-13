@@ -3,24 +3,37 @@ import {
   Button,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   FormLabel,
   Radio,
   RadioGroup,
 } from "@mui/material";
+import { SelectDifficultySchema } from "./validation";
 
 const SelectDifficulty = () => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(null);
+  const [error, setError] = useState(false);
 
   const handleChange = (event) => {
     setValue(event.target.value);
   };
 
-  console.log(value);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    SelectDifficultySchema.validate(value, { abortEarly: false })
+      .then(() => {
+        setError(false);
+        console.log("do something");
+      })
+      .catch((err) => {
+        setError(true);
+      });
+  };
 
   return (
     <form>
       <div className="select-difficulty-form">
-        <FormControl>
+        <FormControl help>
           <FormLabel id="demo-controlled-radio-buttons-group">
             Select Difficulty:
           </FormLabel>
@@ -38,8 +51,15 @@ const SelectDifficulty = () => {
             />
             <FormControlLabel value="hard" control={<Radio />} label="Hard" />
           </RadioGroup>
+          {error && (
+            <FormHelperText error={error}>
+              Please choose a difficulty-level.
+            </FormHelperText>
+          )}
         </FormControl>
-        <Button variant="contained">Start Game</Button>
+        <Button variant="contained" type="submit" onClick={handleSubmit}>
+          Start Game
+        </Button>
       </div>
     </form>
   );
