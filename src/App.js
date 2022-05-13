@@ -3,6 +3,7 @@ import { Dialog, DialogTitle, DialogContent } from "@mui/material";
 import Snake from "./components/snake";
 import Food from "./components/food";
 import SelectDifficulty from "./components/select-difficulty";
+import GameStats from "./components/game-stats";
 import "./App.css";
 
 const maxDim = 700;
@@ -220,6 +221,11 @@ const App = () => {
           />
         </DialogContent>
       </Dialog>
+      <GameStats
+        snakeOne={firstSnakeState}
+        snakeTwo={secondSnakeState}
+        speed={speed}
+      />
       <div
         className="board"
         style={{

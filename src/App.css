@@ -1,6 +1,6 @@
 .board {
   position: relative;
-  margin: 50px auto;
+  margin: 2rem auto;
   border: 2px solid #000;
 }
 
@@ -29,4 +29,19 @@
 .select-difficulty-form {
   display: flex;
   flex-direction: column;
+}
+
+.game-stats-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-stats {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1rem;
+  margin-top: 2rem;
 }
