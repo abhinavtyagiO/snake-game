@@ -1,6 +1,6 @@
 .board {
   position: relative;
-  margin: 2rem auto;
+  margin: 1.5rem auto;
   border: 2px solid #000;
 }
 
@@ -43,5 +43,6 @@
   justify-content: center;
   align-items: center;
   margin-right: 1rem;
-  margin-top: 2rem;
+  margin-top: 3rem;
+
 }

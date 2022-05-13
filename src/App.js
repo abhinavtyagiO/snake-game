@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Dialog, DialogTitle, DialogContent } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, Slide } from "@mui/material";
 import Snake from "./components/snake";
 import Food from "./components/food";
 import SelectDifficulty from "./components/select-difficulty";
 import GameStats from "./components/game-stats";
+import GameOver from "./components/game-over";
 import "./App.css";
 
 const maxDim = 700;
@@ -41,6 +42,30 @@ const App = () => {
   const [speed, setSpeed] = useState(null);
   const [time, setTime] = useState(0);
   const [openModal, setOpenModal] = useState(true);
+  const [openResultModal, setOpenResultModal] = useState(false);
+  const [whichSnakeHits, setWhichSnakeHits] = useState(null);
+
+  useEffect(() => {
+    if (speed != null) {
+      const id = setInterval(changeTime, speed);
+      return () => clearInterval(id);
+    }
+  }, [time, speed]);
+
+  useEffect(() => {
+    onEatingFood();
+  }, [time]);
+
+  useEffect(() => {
+    onCrossingWall();
+    onEatingItself();
+    moveFirstSnake();
+    moveSecondSnake();
+  }, [time]);
+
+  useEffect(() => {
+    document.onkeydown = onKeyDown;
+  }, []);
 
   const onKeyDown = (e) => {
     e = e || window.event;
@@ -77,7 +102,7 @@ const App = () => {
     setTime(time + 1);
   };
 
-  const onCrossingBorder = () => {
+  const onCrossingWall = () => {
     var firstSnakeHead = firstSnakeState[firstSnakeState.length - 1];
     var secondSnakeHead = secondSnakeState[secondSnakeState.length - 1];
     var firstSnakeHits =
@@ -91,6 +116,11 @@ const App = () => {
       secondSnakeHead[0] < 0 ||
       secondSnakeHead[1] < 0;
     if (firstSnakeHits || secondSnakeHits) {
+      if (firstSnakeHits) {
+        setWhichSnakeHits(1);
+      } else if (secondSnakeHits) {
+        setWhichSnakeHits(2);
+      }
       gameOver();
     }
   };
@@ -183,31 +213,13 @@ const App = () => {
   };
 
   const gameOver = () => {
-    alert("Game Over");
-    window.location.href = "/";
+    setSpeed(null);
+    setOpenResultModal(true);
   };
 
-  useEffect(() => {
-    if (speed != null) {
-      const id = setInterval(changeTime, speed);
-      return () => clearInterval(id);
-    }
-  }, [time, speed]);
-
-  useEffect(() => {
-    onEatingFood();
-  }, [time]);
-
-  useEffect(() => {
-    onCrossingBorder();
-    onEatingItself();
-    moveFirstSnake();
-    moveSecondSnake();
-  }, [time]);
-
-  useEffect(() => {
-    document.onkeydown = onKeyDown;
-  }, []);
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
 
   return (
     <div className="App">
@@ -221,11 +233,13 @@ const App = () => {
           />
         </DialogContent>
       </Dialog>
+
       <GameStats
         snakeOne={firstSnakeState}
         snakeTwo={secondSnakeState}
         speed={speed}
       />
+
       <div
         className="board"
         style={{
@@ -237,6 +251,21 @@ const App = () => {
         <Food foodState={foodState} />
         <Snake snakeState={secondSnakeState} />
       </div>
+
+      <Dialog
+        open={openResultModal}
+        TransitionComponent={Transition}
+        keepMounted
+      >
+        <DialogTitle>GAME OVER</DialogTitle>
+        <DialogContent>
+          <GameOver
+            whichSnakeHits={whichSnakeHits}
+            firstSnakeState={firstSnakeState}
+            secondSnakeState={secondSnakeState}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
