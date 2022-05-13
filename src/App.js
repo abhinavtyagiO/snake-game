@@ -191,7 +191,7 @@ const App = () => {
       const id = setInterval(changeTime, speed);
       return () => clearInterval(id);
     }
-  }, [time]);
+  }, [time, speed]);
 
   useEffect(() => {
     onEatingFood();
@@ -213,7 +213,11 @@ const App = () => {
       <Dialog open={openModal}>
         <DialogTitle>Snake Game 🐍</DialogTitle>
         <DialogContent>
-          <SelectDifficulty />
+          <SelectDifficulty
+            speed={speed}
+            setSpeed={setSpeed}
+            setOpenModal={setOpenModal}
+          />
         </DialogContent>
       </Dialog>
       <div

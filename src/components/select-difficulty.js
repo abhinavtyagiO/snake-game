@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { SelectDifficultySchema } from "./validation";
 
-const SelectDifficulty = () => {
+const SelectDifficulty = (props) => {
   const [value, setValue] = useState(null);
   const [error, setError] = useState(false);
 
@@ -23,12 +23,24 @@ const SelectDifficulty = () => {
     SelectDifficultySchema.validate(value, { abortEarly: false })
       .then(() => {
         setError(false);
-        console.log("do something");
+        switch (value) {
+          case "easy":
+            props.setSpeed(300);
+            break;
+          case "normal":
+            props.setSpeed(200);
+            break;
+          case "hard":
+            props.setSpeed(100);
+            break;
+        }
+        props.setOpenModal(false);
       })
       .catch((err) => {
         setError(true);
       });
   };
+  console.log(props.speed);
 
   return (
     <form>
