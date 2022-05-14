@@ -8,7 +8,16 @@ const Snake = (props) => {
           left: `${state[0]}%`,
           top: `${state[1]}%`,
         };
-        return <div className="snake" key={i} style={coordinates}></div>;
+        return (
+          <div
+            className="snake"
+            key={i}
+            style={{
+              ...coordinates,
+              backgroundColor: props.backgroundColor || "#1e3cc8",
+            }}
+          ></div>
+        );
       })}
     </div>
   );

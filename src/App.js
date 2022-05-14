@@ -31,8 +31,10 @@ const App = () => {
   const [firstSnakeState, setSnakeState] = useState([
     [0, 0],
     [2, 0],
+    [4, 0],
   ]);
   const [secondSnakeState, setSecondSnakeState] = useState([
+    [94, 98],
     [96, 98],
     [98, 98],
   ]);
@@ -157,9 +159,9 @@ const App = () => {
   };
 
   const onEatingFood = () => {
-    var firstSnakeHead = firstSnakeState[firstSnakeState.length - 1];
-    var secondSnakeHead = secondSnakeState[secondSnakeState.length - 1];
-    var food = foodState;
+    var firstSnakeHead = [...firstSnakeState[firstSnakeState.length - 1]];
+    var secondSnakeHead = [...secondSnakeState[secondSnakeState.length - 1]];
+    var food = [...foodState];
     var first = firstSnakeHead[0] == food[0] && firstSnakeHead[1] == food[1];
     var second = secondSnakeHead[0] == food[0] && secondSnakeHead[1] == food[1];
 
@@ -167,23 +169,50 @@ const App = () => {
       setFoodState(getRandomCoordinates());
       randomFoodCount--;
       if (randomFoodCount > 0) {
-        if (first) {
-          enlargeSnake(firstSnakeState);
-        } else {
-          enlargeSnake(secondSnakeState);
-        }
+        enlargeSnake(first ? "first" : "second");
       } else if (randomFoodCount == 0) {
         gameOver();
       }
     }
   };
 
-  const enlargeSnake = (state) => {
-    var enlargedSnake = [...state];
+  const enlargeSnake = (snakeNumber) => {
+    var enlargedSnake;
+    var snakeDirection;
+
+    if (snakeNumber == "first") {
+      enlargedSnake = [...firstSnakeState];
+      snakeDirection = direction;
+    } else {
+      enlargedSnake = [...secondSnakeState];
+      snakeDirection = secondSnakeDirection;
+    }
+
+    var newDot;
     var tail = enlargedSnake[0];
-    enlargedSnake.unshift([tail[0], tail[1]]);
-    console.log(enlargedSnake);
-    setSnakeState(enlargedSnake);
+
+    switch (snakeDirection) {
+      case "RIGHT":
+        newDot = [tail[0] - 2, tail[1]];
+        break;
+      case "LEFT":
+        newDot = [tail[0] + 2, tail[1]];
+        break;
+      case "UP":
+        newDot = [tail[0], tail[1] + 2];
+        break;
+      case "DOWN":
+        newDot = [tail[0], tail[1] - 2];
+        break;
+    }
+
+    if (snakeNumber == "first") {
+      console.log(snakeNumber);
+      setSnakeState([[...newDot], ...firstSnakeState]);
+    } else {
+      console.log(snakeNumber);
+      setSecondSnakeState([[...newDot], ...secondSnakeState]);
+    }
   };
 
   const moveFirstSnake = () => {
@@ -274,10 +303,7 @@ const App = () => {
       >
         <Snake snakeState={firstSnakeState} />
         <Food foodState={foodState} />
-        <Snake
-          style={{ backgroundColor: "#bb1068" }}
-          snakeState={secondSnakeState}
-        />
+        <Snake backgroundColor="#bb1068" snakeState={secondSnakeState} />
       </div>
 
       <Dialog

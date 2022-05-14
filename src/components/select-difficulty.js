@@ -40,7 +40,6 @@ const SelectDifficulty = (props) => {
         setError(true);
       });
   };
-  console.log(props.speed);
 
   return (
     <form>
