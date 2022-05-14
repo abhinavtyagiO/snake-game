@@ -1,15 +1,24 @@
+.App {
+  height: 100vh;
+  width: 100vw;
+  background: url("../public/snake-background.jpg");
+  background-size: contain;
+}
+
 .board {
   position: relative;
-  margin: 1.5rem auto;
-  border: 2px solid #000;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1.5rem solid #538633;
+  background-color: #a4d348;
 }
 
 .snake {
   position: absolute;
   width: 2%;
   height: 2%;
-  background-color: #000;
-  margin: 1px;
+  background-color: #1e3cc8;
+  border: 1px solid #a4d348;
   z-index: 2;
 }
 
@@ -21,7 +30,8 @@
   position: absolute;
   width: 2%;
   height: 2%;
-  background-color: purple;
+  border-radius: 7px;
+  background-color: #e81616;
   margin: 1px;
   z-index: 1;
 }
@@ -33,8 +43,13 @@
 
 .game-stats-container {
   display: flex;
+  margin-left: auto;
+  margin-right: auto;
   align-items: center;
   justify-content: center;
+  background-color: #4a752c;
+  border-left: 1.5rem solid #4a752c;
+  border-right: 1.5rem solid #4a752c;
 }
 
 .game-stats {
@@ -44,5 +59,13 @@
   align-items: center;
   margin-right: 1rem;
   margin-top: 3rem;
+}
 
+.snake-image {
+  max-width: 100%;
+  margin-bottom: 1rem;
+}
+
+.second-snake {
+  background-color: #bb1068 !important;
 }

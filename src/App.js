@@ -58,7 +58,7 @@ const App = () => {
 
   useEffect(() => {
     onCrossingWall();
-    onEatingItself();
+    onEatingOtherSnake();
     moveFirstSnake();
     moveSecondSnake();
   }, [time]);
@@ -71,29 +71,29 @@ const App = () => {
     e = e || window.event;
     switch (e.keyCode) {
       case 37:
-        setDirection("LEFT");
+        setSecondSnakeDirection("LEFT");
         break;
       case 38:
-        setDirection("UP");
+        setSecondSnakeDirection("UP");
         break;
       case 39:
-        setDirection("RIGHT");
+        setSecondSnakeDirection("RIGHT");
         break;
       case 40:
-        setDirection("DOWN");
+        setSecondSnakeDirection("DOWN");
         break;
 
       case 65:
-        setSecondSnakeDirection("LEFT");
+        setDirection("LEFT");
         break;
       case 87:
-        setSecondSnakeDirection("UP");
+        setDirection("UP");
         break;
       case 68:
-        setSecondSnakeDirection("RIGHT");
+        setDirection("RIGHT");
         break;
       case 83:
-        setSecondSnakeDirection("DOWN");
+        setDirection("DOWN");
         break;
     }
   };
@@ -125,15 +125,35 @@ const App = () => {
     }
   };
 
-  const onEatingItself = () => {
-    var snake = [...firstSnakeState];
-    var head = snake[snake.length - 1];
-    snake.pop();
-    snake.forEach((dot) => {
-      if (head[0] == dot[0] && head[1] == dot[1]) {
-        gameOver();
+  const onEatingOtherSnake = () => {
+    var firstSnake = [...firstSnakeState];
+    var secondSnake = [...secondSnakeState];
+    var firstSnakeHead = firstSnakeState[firstSnakeState.length - 1];
+    var secondSnakeHead = secondSnakeState[secondSnakeState.length - 1];
+    var isSecondSnake = false;
+    var isFirstSnake = false;
+
+    isSecondSnake = firstSnake.forEach((dot) => {
+      if (secondSnakeHead[0] == dot[0] || secondSnakeHead[1] == dot[1]) {
+        return true;
       }
     });
+
+    isFirstSnake = secondSnake.forEach((dot) => {
+      if (firstSnakeHead[0] == dot[0] || firstSnakeHead[1] == dot[1]) {
+        return true;
+      }
+    });
+
+    if (isSecondSnake || isFirstSnake) {
+      if (isFirstSnake) {
+        setWhichSnakeHits(1);
+      } else if (isSecondSnake) {
+        setWhichSnakeHits(2);
+      }
+
+      gameOver();
+    }
   };
 
   const onEatingFood = () => {
@@ -224,8 +244,12 @@ const App = () => {
   return (
     <div className="App">
       <Dialog open={openModal}>
-        <DialogTitle>Snake Game 🐍</DialogTitle>
+        <DialogTitle>Welcome to Snakes! 🐍</DialogTitle>
         <DialogContent>
+          <img
+            className="snake-image"
+            src={process.env.PUBLIC_URL + "/snake.png"}
+          />{" "}
           <SelectDifficulty
             speed={speed}
             setSpeed={setSpeed}
@@ -235,6 +259,7 @@ const App = () => {
       </Dialog>
 
       <GameStats
+        dim={randomDimension}
         snakeOne={firstSnakeState}
         snakeTwo={secondSnakeState}
         speed={speed}
@@ -249,7 +274,10 @@ const App = () => {
       >
         <Snake snakeState={firstSnakeState} />
         <Food foodState={foodState} />
-        <Snake snakeState={secondSnakeState} />
+        <Snake
+          style={{ backgroundColor: "#bb1068" }}
+          snakeState={secondSnakeState}
+        />
       </div>
 
       <Dialog
@@ -259,6 +287,10 @@ const App = () => {
       >
         <DialogTitle>GAME OVER</DialogTitle>
         <DialogContent>
+          <img
+            className="snake-image"
+            src={process.env.PUBLIC_URL + "/gameover.jpeg"}
+          />
           <GameOver
             whichSnakeHits={whichSnakeHits}
             firstSnakeState={firstSnakeState}

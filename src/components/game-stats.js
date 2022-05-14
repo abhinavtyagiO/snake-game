@@ -16,18 +16,22 @@ const GameStats = (props) => {
   };
 
   return (
-    <div className="game-stats-container">
+    <div className="game-stats-container" style={{ width: props.dim }}>
       <div className="game-stats">
-        <Typography style={{ color: "#595858" }}>FIRST SNAKE SCORE</Typography>
-        <Typography variant="h2">{props.snakeOne.length}</Typography>
+        <Typography style={{ color: "#EAEAEA" }}>FIRST SNAKE SCORE</Typography>
+        <Typography style={{ color: "#EAEAEA" }} variant="h2">
+          {props.snakeOne.length}
+        </Typography>
       </div>
       <div className="game-stats">
-        <Typography style={{ color: "#595858" }}>SECOND SNAKE SCORE</Typography>
-        <Typography variant="h2">{props.snakeTwo.length}</Typography>
+        <Typography style={{ color: "#EAEAEA" }}>SECOND SNAKE SCORE</Typography>
+        <Typography style={{ color: "#EAEAEA" }} variant="h2">
+          {props.snakeTwo.length}
+        </Typography>
       </div>
       <div className="game-stats">
-        <Typography style={{ color: "#595858" }}>DIFFICULTY</Typography>
-        <Typography variant="h2">
+        <Typography style={{ color: "#EAEAEA" }}>DIFFICULTY</Typography>
+        <Typography style={{ color: "#EAEAEA" }} variant="h2">
           {props.speed == null ? "-" : showDiff()}
         </Typography>
       </div>
