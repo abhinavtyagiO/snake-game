@@ -59,13 +59,6 @@ const App = () => {
   }, [time]);
 
   useEffect(() => {
-    onCrossingWall();
-    onEatingOtherSnake();
-    moveFirstSnake();
-    moveSecondSnake();
-  }, [time]);
-
-  useEffect(() => {
     document.onkeydown = onKeyDown;
   }, []);
 
@@ -128,22 +121,22 @@ const App = () => {
   };
 
   const onEatingOtherSnake = () => {
-    var firstSnake = [...firstSnakeState];
-    var secondSnake = [...secondSnakeState];
-    var firstSnakeHead = firstSnakeState[firstSnakeState.length - 1];
-    var secondSnakeHead = secondSnakeState[secondSnakeState.length - 1];
+    const firstSnake = [...firstSnakeState];
+    const secondSnake = [...secondSnakeState];
+    const firstSnakeHead = firstSnakeState[firstSnakeState.length - 1];
+    const secondSnakeHead = secondSnakeState[secondSnakeState.length - 1];
     var isSecondSnake = false;
     var isFirstSnake = false;
 
-    isSecondSnake = firstSnake.forEach((dot) => {
-      if (secondSnakeHead[0] == dot[0] || secondSnakeHead[1] == dot[1]) {
-        return true;
+    firstSnake.forEach((dot) => {
+      if (secondSnakeHead[0] === dot[0] && secondSnakeHead[1] === dot[1]) {
+        isSecondSnake = true;
       }
     });
 
-    isFirstSnake = secondSnake.forEach((dot) => {
-      if (firstSnakeHead[0] == dot[0] || firstSnakeHead[1] == dot[1]) {
-        return true;
+    secondSnake.forEach((dot) => {
+      if (firstSnakeHead[0] === dot[0] && firstSnakeHead[1] === dot[1]) {
+        isFirstSnake = true;
       }
     });
 
@@ -155,6 +148,9 @@ const App = () => {
       }
 
       gameOver();
+    } else {
+      moveFirstSnake();
+      moveSecondSnake();
     }
   };
 
@@ -173,6 +169,9 @@ const App = () => {
       } else if (randomFoodCount == 0) {
         gameOver();
       }
+    } else {
+      onCrossingWall();
+      onEatingOtherSnake();
     }
   };
 
