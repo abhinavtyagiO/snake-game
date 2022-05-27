@@ -68,7 +68,12 @@ const SelectDifficulty = (props) => {
             </FormHelperText>
           )}
         </FormControl>
-        <Button variant="contained" type="submit" onClick={handleSubmit}>
+        <Button
+          variant="contained"
+          disabled={value == null}
+          type="submit"
+          onClick={handleSubmit}
+        >
           Start Game
         </Button>
       </div>
