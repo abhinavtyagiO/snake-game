@@ -2,7 +2,7 @@ import React from "react";
 
 const Snake = (props) => {
   return (
-    <div>
+    <div className={`snake-body${props.snake}`}>
       {props.snakeState.map((state, i) => {
         const coordinates = {
           left: `${state[0]}%`,
@@ -12,6 +12,8 @@ const Snake = (props) => {
           <div
             className="snake"
             key={i}
+            id={i}
+            tabIndex={i}
             style={{
               ...coordinates,
               backgroundColor: props.backgroundColor || "#1e3cc8",

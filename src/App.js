@@ -64,6 +64,7 @@ const App = () => {
 
   const onKeyDown = (e) => {
     e = e || window.event;
+    console.log(e.keyCode);
     switch (e.keyCode) {
       case 37:
         setSecondSnakeDirection("LEFT");
@@ -296,13 +297,17 @@ const App = () => {
       <div
         className="board"
         style={{
-          height: `${randomDimension}px`,
-          width: `${randomDimension}px`,
+          height: "600px",
+          width: "600px",
         }}
       >
-        <Snake snakeState={firstSnakeState} />
+        <Snake snakeState={firstSnakeState} snake="1" />
         <Food foodState={foodState} />
-        <Snake backgroundColor="#bb1068" snakeState={secondSnakeState} />
+        <Snake
+          backgroundColor="#bb1068"
+          snakeState={secondSnakeState}
+          snake="2"
+        />
       </div>
 
       <Dialog
@@ -310,7 +315,7 @@ const App = () => {
         TransitionComponent={Transition}
         keepMounted
       >
-        <DialogTitle>GAME OVER</DialogTitle>
+        <DialogTitle id="game-over">GAME OVER</DialogTitle>
         <DialogContent>
           <img
             className="snake-image"
